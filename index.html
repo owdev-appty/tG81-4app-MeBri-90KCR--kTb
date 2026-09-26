@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>衝動タイマー</title>
+  <meta name="theme-color" content="#FFF4E6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="衝動タイマー">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-512.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 1. ホーム -->
+  <section id="screen-home" class="screen">
+    <div class="center">
+      <button id="btn-want" class="btn-want" type="button">食べたい</button>
+    </div>
+    <nav class="corner-nav">
+      <button type="button" class="link-quiet" data-go="summary">記録</button>
+      <button type="button" class="link-quiet" data-go="settings">設定</button>
+    </nav>
+  </section>
+
+  <!-- 2. 気分選択 -->
+  <section id="screen-mood" class="screen" hidden>
+    <h2 class="screen-title">いまの状態は？</h2>
+    <div id="mood-list" class="stack"></div>
+    <div class="bottom">
+      <button type="button" class="link-quiet" data-go="home">戻る</button>
+    </div>
+  </section>
+
+  <!-- 3. タイマー -->
+  <section id="screen-timer" class="screen" hidden>
+    <div class="center">
+      <p id="timer-mood" class="timer-mood"></p>
+      <p id="timer-count" class="timer-count">10:00</p>
+      <p class="timer-hint">🎵 隣のショートカットで好きな曲を</p>
+    </div>
+    <div class="bottom">
+      <button id="btn-quit" type="button" class="btn-quit">今すぐやめる</button>
+    </div>
+  </section>
+
+  <!-- 4. 終了 -->
+  <section id="screen-done" class="screen" hidden>
+    <div class="center">
+      <h2 class="question">まだ食べたい？</h2>
+      <div class="stack">
+        <button id="btn-yes" type="button" class="btn-big">はい</button>
+        <button id="btn-no" type="button" class="btn-big">いいえ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b. 代替スナック -->
+  <section id="screen-snack" class="screen" hidden>
+    <div class="center">
+      <p id="snack-name" class="snack-name"></p>
+      <div class="stack">
+        <button id="btn-eat" type="button" class="btn-big">それでも食べる</button>
+        <button id="btn-skip" type="button" class="btn-big">やめておく</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 週次サマリー -->
+  <section id="screen-summary" class="screen" hidden>
+    <h2 class="screen-title">記録</h2>
+    <div id="summary-body" class="summary"></div>
+    <div class="bottom">
+      <button type="button" class="btn-mid" data-go="home">ホームへ</button>
+    </div>
+  </section>
+
+  <!-- 6. 設定 -->
+  <section id="screen-settings" class="screen scroll" hidden>
+    <h2 class="screen-title">設定</h2>
+
+    <h3 class="section-title">気分とタイマー（分）</h3>
+    <div id="set-moods" class="edit-list"></div>
+    <button id="btn-add-mood" type="button" class="btn-add">＋ 気分を追加</button>
+
+    <h3 class="section-title">代替スナック</h3>
+    <div id="set-snacks" class="edit-list"></div>
+    <button id="btn-add-snack" type="button" class="btn-add">＋ スナックを追加</button>
+
+    <h3 class="section-title">深夜モード（時）</h3>
+    <div class="night-row">
+      <input id="set-night-start" type="number" inputmode="numeric" min="0" max="23">
+      <span>時 〜 翌</span>
+      <input id="set-night-end" type="number" inputmode="numeric" min="0" max="23">
+      <span>時</span>
+    </div>
+
+    <div class="bottom-inline">
+      <button type="button" class="btn-mid" data-go="home">ホームへ</button>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

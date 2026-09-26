@@ -1,0 +1,15 @@
+{
+  "name": "衝動タイマー",
+  "short_name": "衝動タイマー",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF4E6",
+  "theme_color": "#FFF4E6",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
