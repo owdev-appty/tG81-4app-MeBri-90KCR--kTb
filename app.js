@@ -74,6 +74,58 @@ function vibrate() {
   } catch (e) { /* 非対応端末では何もしない */ }
 }
 
+/* ---------- 通知音（Web Audio API） ----------
+ * iOS Safari では、ユーザー操作（タップ）の中で AudioContext を作成・再開して
+ * おかないと後から音を鳴らせないため、タイマー開始のタップ時に unlockAudio() を呼ぶ。
+ */
+
+let audioCtx = null;
+
+function unlockAudio() {
+  try {
+    // 再生中の音楽（Apple Music など）を止めずに重ねて鳴らす
+    if (navigator.audioSession) navigator.audioSession.type = 'ambient';
+    if (!audioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      audioCtx = new Ctx();
+    }
+    if (audioCtx.state !== 'running') audioCtx.resume();
+    // 無音を一瞬再生して iOS の再生制限を解除する
+    const buf = audioCtx.createBuffer(1, 1, 22050);
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    src.connect(audioCtx.destination);
+    src.start(0);
+  } catch (e) { /* 非対応環境では何もしない */ }
+}
+
+function playChime() {
+  if (!audioCtx) return;
+  const play = () => {
+    const t0 = audioCtx.currentTime + 0.05;
+    // 2音のチャイムを2回（約1.3秒）
+    const notes = [880, 1318.5, 880, 1318.5];
+    notes.forEach((freq, i) => {
+      const start = t0 + i * 0.32;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.5, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + 0.3);
+    });
+  };
+  try {
+    if (audioCtx.state === 'running') play();
+    else audioCtx.resume().then(play).catch(() => {});
+  } catch (e) { /* noop */ }
+}
+
 /* ---------- screens ---------- */
 
 const SCREENS = ['home', 'mood', 'timer', 'done', 'snack', 'summary', 'settings'];
@@ -135,6 +187,7 @@ function releaseWakeLock() {
 }
 
 function startTimer(mood) {
+  unlockAudio(); // 気分ボタンのタップ内で呼ぶ必要がある
   const minutes = Math.max(1, Number(mood.minutes) || 10);
   state.active = {
     label: mood.label,
@@ -179,6 +232,7 @@ function finishTimer() {
   state.active.phase = 'done';
   save();
   vibrate();
+  playChime();
   show('done');
 }
 

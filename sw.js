@@ -1,5 +1,5 @@
 // オフラインでも起動できるよう、アプリ本体をキャッシュする（外部通信なし）
-const CACHE = 'impulse-timer-v1';
+const CACHE = 'impulse-timer-v2';
 const ASSETS = [
   './',
   './index.html',
